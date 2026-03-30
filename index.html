@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript: Od Algoritmů k Interaktivitě</title>
+    <style>
+        /* --- CSS STYLING --- */
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --bg-color: #0f172a; /* Tmavě modrá/břidlicová */
+            --text-color: #e2e8f0;
+            --accent-primary: #38bdf8; /* Světle modrá JS */
+            --accent-secondary: #facc15; /* Žlutá JS */
+            --exercise-bg: #14532d; /* Tmavě zelená pro cvičení */
+            --exercise-border: #4ade80;
+            --code-bg: #1e293b;
+            --code-text: #a5b4fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden; /* Zabrání scrollování, funguje jako prezentace */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* UI Prvky */
+        #progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #334155;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background-color: var(--accent-secondary);
+            width: 0%;
+            transition: width 0.3s ease-out;
+        }
+
+        #slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            font-weight: 600;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        /* Kontejner slidů */
+        #presentation-area {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        /* Samotný slide */
+        .slide {
+            position: absolute;
+            width: 100%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto; /* Kdyby bylo moc textu, slide lze scrollovat */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 40px;
+            border-radius: 16px;
+        }
+
+        /* Ostranění scrollbaru pro hezčí vzhled */
+        .slide::-webkit-scrollbar { width: 8px; }
+        .slide::-webkit-scrollbar-track { background: transparent; }
+        .slide::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .slide.previous {
+            transform: translateX(-50px);
+        }
+
+        /* Typografie */
+        h1 {
+            font-size: 3.5rem;
+            color: var(--accent-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            color: var(--accent-primary);
+            border-bottom: 3px solid #334155;
+            padding-bottom: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 2rem;
+            color: #e2e8f0;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p, li {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+        }
+
+        strong {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Kód */
+        pre {
+            background-color: var(--code-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-primary);
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.3rem;
+            color: var(--code-text);
+            font-variant-ligatures: none; /* Vypne spojování znaků jako === do jedné čáry */
+        }
+
+        /* Specifický styl pro cvičení */
+        .slide.exercise {
+            background-color: var(--exercise-bg);
+            border: 2px solid var(--exercise-border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide.exercise h2 {
+            color: var(--exercise-border);
+            border-bottom-color: rgba(74, 222, 128, 0.3);
+        }
+
+        .slide.exercise pre {
+            border-left-color: var(--exercise-border);
+            background-color: #064e3b;
+        }
+
+        /* Zvýraznění (Hints) */
+        .hint {
+            margin-top: 2rem;
+            padding: 15px;
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    
+    <div id="slide-counter">1 / X</div>
+
+    <div id="presentation-area">
+        
+        <!-- ==========================================
+             ČÁST 1: ÚVOD A ZÁKLADY
+        =========================================== -->
+        <div class="slide">
+            <h1>JavaScript 🚀</h1>
+            <h2>Od logiky po interaktivní web</h2>
+            <p>Umíte HTML (kostra) a CSS (kabát). Nyní je čas dát webu <strong>mozek a svaly</strong>.</p>
+            <ul>
+                <li>JavaScript oživuje statické stránky.</li>
+                <li>Dnes běží všude: v prohlížeči, na serverech, v mobilech i v chytrých hodinkách.</li>
+                <li>Začneme od základů logiky, ne od barviček na webu.</li>
+            </ul>
+            <div class="hint">Ovládání: Šipka doprava ➡️ (nebo Mezerník) pro další slide. Šipka doleva ⬅️ pro návrat.</div>
+        </div>
+
+        <div class="slide">
+            <h2>Náš nástroj: Vývojářská konzole</h2>
+            <p>Zatím nebudeme manipulovat s webovou stránkou. Musíme pochopit, jak jazyk funguje uvnitř.</p>
+            <p>Otevřete si v prohlížeči <strong>Vývojářské nástroje (F12)</strong> a přepněte na záložku <strong>Console (Konzole)</strong>.</p>
+            <pre><code>// Toto je komentář. Prohlížeč ho ignoruje.
+console.log("Ahoj světe!");</code></pre>
+            <p>Příkaz <code>console.log()</code> vypíše cokoli do konzole. Je to váš radar, stetoskop i rentgen při hledání chyb (debugging).</p>
+        </div>
+
+        <div class="slide">
+            <h2>Konzole přímo ve VS Code? Jde to! 💻</h2>
+            <p>Nechce se vám při tréninku logiky neustále překlikávat do prohlížeče? Zkuste to přímo v editoru:</p>
+            <ul>
+                <li><strong>Rozšíření Code Runner:</strong> Nainstalujte si ve VS Code doplněk "Code Runner". Pak stačí v <code>.js</code> souboru kliknout na ikonku "Play" ▶️ vpravo nahoře a výsledek uvidíte dole na záložce Output.</li>
+            </ul>
+            <div class="hint">Tento doplněk extrémně urychluje učení algoritmů a trénování kódu.</div>
+        </div>
+
+        <div class="slide">
+            <h2>Jak spojit JS s HTML?</h2>
+            <p>Kód píšeme buď přímo do HTML, nebo lépe - do externího souboru.</p>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Můj Web&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Nadpis&lt;/h1&gt;
+    
+    &lt;!-- Script dáváme VŽDY těsně před konec body --&gt;
+    &lt;script src="muj-skript.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p>Proč na konec? Aby se nejprve načetla celá stránka a uživateli se něco zobrazilo, než se začne zpracovávat složitý kód.</p>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 2: PROMĚNNÉ A DATOVÉ TYPY
+        =========================================== -->
+        <div class="slide">
+            <h2>Proměnné (Variables) 📦</h2>
+            <p>Představte si proměnnou jako <strong>krabici s nálepkou</strong>. Do krabice něco vložíme a díky nálepce to později najdeme.</p>
+            <pre><code>let vek = 18;       
+const jmeno = "Jan"; 
+
+// var už nepoužíváme (je to starý způsob plný chyb)</code></pre>
+            <ul>
+                <li><code>let</code> použijte, pokud se hodnota bude v budoucnu měnit (např. skóre ve hře).</li>
+                <li><code>const</code> (konstanta) použijte, pokud se hodnota už nikdy nezmění (např. datum narození).</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>Pravidla pro pojmenování krabic</h2>
+            <p>Počítač je hloupý detailista. Záleží na každém písmenu.</p>
+            <ul>
+                <li>Nesmí začínat číslem (<code>let 1hrac</code> je chyba).</li>
+                <li>Nesmí obsahovat mezery (<code>let jmeno hrace</code> je chyba).</li>
+                <li>Záleží na velikosti písmen (<code>Vek</code> a <code>vek</code> jsou dvě různé krabice!).</li>
+            </ul>
+            <p><strong>Doporučení (Camel Case):</strong> První slovo malé, každé další začíná velkým písmenem: <code>pocetZivotuHrace</code>, <code>hlavniNadpis</code>.</p>
+        </div>
+
+        <div class="slide">
+            <h2>Datové typy: Co dáváme do krabic?</h2>
+            <p>JavaScript musí vědět, s čím pracuje. Zda s textem, nebo s číslem.</p>
+            <ul>
+                <li><strong>Number (Číslo):</strong> <code>let x = 42;</code> nebo <code>let pi = 3.14;</code> (Desetinná místa se píší s tečkou!)</li>
+                <li><strong>String (Text):</strong> <code>let jmeno = "Karel";</code> (Text MUSÍ být v uvozovkách, jinak si JS myslí, že je to jméno jiné proměnné).</li>
+                <li><strong>Boolean (Pravdivost):</strong> <code>let jePlnolety = true;</code> nebo <code>false</code>.</li>
+            </ul>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 3: VSTUPY, VÝSTUPY A MATEMATIKA
+        =========================================== -->
+        <div class="slide">
+            <h2>Základní komunikace s uživatelem</h2>
+            <p>Než se naučíme číst data z HTML formulářů, použijeme to nejjednodušší:</p>
+            <pre><code>// 1. Zobrazení zprávy (Vyskakovací okno)
+alert("Pozor, útok viru! (Dělám si srandu)");
+
+// 2. Dotaz na uživatele (Vrací String / Text!)
+let odpoved = prompt("Jak se jmenuješ?");
+console.log("Uživatel se jmenuje: " + odpoved);
+
+// 3. Otázka Ano/Ne (Vrací Boolean)
+let souhlasi = confirm("Opravdu chceš smazat disk?");</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Zrádnost textu vs. čísla ⚠️</h2>
+            <p>Funkce <code>prompt()</code> vám <strong>VŽDY vrátí text (String)</strong>. I když uživatel napíše číslo 15.</p>
+            <pre><code>let a = prompt("Zadej první číslo:"); // uživatel zadá 10
+let b = prompt("Zadej druhé číslo:"); // uživatel zadá 5
+
+let soucet = a + b; 
+console.log(soucet); // Vypíše: 105 !!! Proč?</code></pre>
+            <p>Protože sčítání textů ("10" + "5") je jednoduše slepí k sobě (tzv. konkatenace). Musíme text převést na číslo!</p>
+        </div>
+
+        <div class="slide">
+            <h2>Převod textu na číslo</h2>
+            <p>K převodu slouží funkce <code>Number()</code>.</p>
+            <pre><code>let zadani = prompt("Zadej věk:");
+let vek = Number(zadani); // Nyní je to opravdové číslo
+
+// Kratší zápis:
+let pocetRohlíku = Number(prompt("Kolik chceš rohlíků?"));</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 1: Kalkulačka věku</h2>
+            <p><strong>Úkol pro vás:</strong></p>
+            <ol>
+                <li>Pomocí <code>prompt()</code> se zeptejte uživatele na aktuální rok. Nezapomeňte to převést na číslo!</li>
+                <li>Pomocí druhého <code>prompt()</code> se zeptejte na rok jeho narození (taky převést).</li>
+                <li>Spočítejte jeho věk (aktuální rok mínus rok narození) a uložte do proměnné.</li>
+                <li>Pomocí <code>alert()</code> vypište zprávu: "Tvůj věk je přibližně [výsledek] let."</li>
+            </ol>
+            <div class="hint">Pro spojování textu a proměnných použijte znak plus: <code>"Ahoj " + jmeno</code></div>
+        </div>
+
+        <div class="slide">
+            <h2>Základní matematika</h2>
+            <p>JavaScript umí fungovat jako kalkulačka:</p>
+            <ul>
+                <li>Sčítání: <code>+</code></li>
+                <li>Odčítání: <code>-</code></li>
+                <li>Násobení: <code>*</code></li>
+                <li>Dělení: <code>/</code></li>
+                <li>Mocnina: <code>**</code> (např. <code>2 ** 3</code> je 8)</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>C# vs. JavaScript: Kde je int a float? 🤔</h2>
+            <p>Pokud znáte jiné jazyky (třeba C#), možná jste zvyklí, že <code>5 / 2 = 2</code> (celočíselné dělení).</p>
+            <p><strong>V JavaScriptu to tak NENÍ.</strong> JS má jen jeden typ pro čísla (<code>Number</code>) a všechno počítá s desetinnými místy.</p>
+            <pre><code>let vysledek = 5 / 2;
+console.log(vysledek); // Vypíše rovnou 2.5!
+
+// Co když chci celočíselné dělení? Musím zaokrouhlit:
+let celeCislo = Math.floor(5 / 2); 
+console.log(celeCislo); // Vypíše 2</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Tajemný operátor: Modulo <code>%</code></h2>
+            <p>Modulo vrací <strong>zbytek po celočíselném dělení</strong>. Je to nesmírně důležitý nástroj v programování.</p>
+            <pre><code>let zbytek = 10 % 3; 
+// Výsledek je 1. Proč? Protože 10 = 3*3 + 1.
+
+let vysledek = 14 % 5;
+// Výsledek je 4. (5*2 = 10, zbývá 4).</code></pre>
+            <p><strong>K čemu je to dobré?</strong> Ideální pro zjišťování sudosti/lichosti čísla. Sudé číslo dělené 2 má zbytek 0.</p>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 4: PODMÍNKY A ROZHODOVÁNÍ
+        =========================================== -->
+        <div class="slide">
+            <h2>Rozhodování programu (If / Else) 🚦</h2>
+            <p>Programy musí reagovat na situace. K tomu slouží podmínky.</p>
+            <pre><code>let vek = 15;
+
+if (vek >= 18) {
+    console.log("Vítej, dospěláku!");
+} else {
+    console.log("Jsi moc mladý, přístup odepřen.");
+}</code></pre>
+            <p>Kód uvnitř složených závorek <code>{}</code> se vykoná jen tehdy, pokud je podmínka v kulatých závorkách <code>()</code> pravdivá (true).</p>
+        </div>
+
+        <div class="slide">
+            <h2>Řetězení podmínek (Else if)</h2>
+            <p>Co když máme více než dvě možnosti?</p>
+            <pre><code>let body = 85;
+
+if (body >= 90) {
+    console.log("Máš jedničku!");
+} else if (body >= 75) {
+    console.log("Máš dvojku.");
+} else if (body >= 50) {
+    console.log("Máš trojku, s odřenýma ušima.");
+} else {
+    console.log("Propadas, uvidíme se v září.");
+}</code></pre>
+            <p>Počítač čte podmínky odshora. Jakmile najde první pravdivou, vykoná ji a zbytek přeskočí.</p>
+        </div>
+
+        <div class="slide">
+            <h2>Porovnávací operátory</h2>
+            <p>Jak můžeme věci porovnávat?</p>
+            <ul>
+                <li><code>&gt;</code> Větší než</li>
+                <li><code>&lt;</code> Menší než</li>
+                <li><code>&gt;=</code> Větší nebo rovno</li>
+                <li><code>&lt;=</code> Menší nebo rovno</li>
+                <li><code>===</code> Rovná se (Přesná shoda hodnoty i typu!)</li>
+                <li><code>!==</code> Nerovná se</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>Rozdíl mezi = , == a === ⚠️</h2>
+            <p>Tohle je nejčastější chyba začátečníků!</p>
+            <ul>
+                <li><code>=</code> (Jedno rovnítko) - <strong>Přiřazení</strong>. Dává věc do krabice. <code>let x = 5;</code></li>
+                <li><code>==</code> (Dvě rovnítka) - <strong>Volné porovnání</strong>. Porovnává jen hodnotu, nezajímá ho datový typ. <code>5 == "5"</code> je Pravda (True)!</li>
+                <li><code>===</code> (Tři rovnítka) - <strong>Přísné porovnání</strong>. Musí se rovnat hodnota i datový typ. <code>5 === "5"</code> je Nepravda (False).</li>
+            </ul>
+            <p><strong>Pravidlo: V JavaScriptu VŽDY používejte <code>===</code>.</strong> Vyhnete se hromadě chyb.</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 2: Sudé, nebo liché?</h2>
+            <p>Čas spojit matematiku a rozhodovací logiku.</p>
+            <ol>
+                <li>Načtěte od uživatele libovolné číslo.</li>
+                <li>Zjistěte, zda je zadané číslo sudé (zbytek po dělení dvěma je nula).</li>
+                <li>Pokud je sudé, vypište uživateli zprávu "Číslo je sudé".</li>
+                <li>V opačném případě vypište zprávu "Číslo je liché".</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>Logické operátory (A zároveň, Nebo)</h2>
+            <p>Často potřebujeme splnit více podmínek najednou.</p>
+            <ul>
+                <li><code>&&</code> (A zároveň - AND): Obě strany musí být pravdivé.<br>
+                    <code>if (vek >= 18 && maPenize === true) { ... }</code></li>
+                <li><code>||</code> (Nebo - OR): Stačí, aby platila alespoň jedna strana. (Znak se píše pravý Alt + W).<br>
+                    <code>if (den === "Sobota" || den === "Neděle") { console.log("Je víkend!"); }</code></li>
+                <li><code>!</code> (Negace - NOT): Obrátí pravdu na nepravdu a naopak.<br>
+                    <code>if (!jePlnolety) { console.log("Je nezletilý."); }</code></li>
+            </ul>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 5: CYKLY (LOOPS)
+        =========================================== -->
+        <div class="slide">
+            <h2>Cykly (Loops) 🔁</h2>
+            <p>Představte si, že máte vypsat do konzole čísla od 1 do 1000. Budete psát tisíc řádků kódu? Ne. Použijeme cyklus.</p>
+            <p>Základní princip programování je <strong>DRY</strong> (Don't Repeat Yourself - Neopakuj se).</p>
+            <p>Cykly dělají to, že opakují určitý blok kódu pořád dokola, dokud platí nějaká podmínka.</p>
+        </div>
+
+        <div class="slide">
+            <h2>Cyklus WHILE (Dokud)</h2>
+            <p>Základní typ cyklu. "Dělej toto, dokud platí podmínka."</p>
+            <pre><code>let pocitadlo = 1;
+
+while (pocitadlo <= 5) {
+    console.log("Číslo je: " + pocitadlo);
+    pocitadlo = pocitadlo + 1; // Zásadní krok! Zvýšení hodnoty.
+}
+// Vypíše čísla 1, 2, 3, 4, 5</code></pre>
+            <p>⚠️ <strong>Pozor na nekonečné cykly!</strong> Pokud zapomenete přičíst (změnit stav) uvnitř cyklu, podmínka bude platit navždy a prohlížeč "zamrzne".</p>
+        </div>
+
+        <div class="slide">
+            <h2>Zkrácené zápisy (Inkrementace)</h2>
+            <p>Místo <code>pocitadlo = pocitadlo + 1;</code> existují zkratky, které programátoři milují.</p>
+            <ul>
+                <li><code>pocitadlo += 1;</code> (Zvyš stávající hodnotu o 1)</li>
+                <li><code>pocitadlo += 5;</code> (Zvyš stávající hodnotu o 5)</li>
+                <li><code>pocitadlo++;</code> (Tzv. inkrementace. Zvyš přesně o 1. Úplně nejkratší zápis.)</li>
+                <li><code>pocitadlo--;</code> (Dekrementace. Sniž o 1.)</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>Cyklus FOR</h2>
+            <p>Nejpoužívanější cyklus. Je to vlastně <code>while</code> nacpaný do jednoho řádku. Používáme ho, když víme, kolikrát chceme cyklus opakovat.</p>
+            <pre><code>// for (1. start ; 2. podmínka ; 3. krok)
+for (let i = 1; i <= 10; i++) {
+    console.log(i);
+}</code></pre>
+            <p>Jak to funguje:</p>
+            <ol>
+                <li>Vytvoří se proměnná <code>i</code> (zkratka pro index) s hodnotou 1. (Provede se jen jednou na začátku).</li>
+                <li>Zkontroluje se, zda je <code>i &lt;= 10</code>. Pokud ano, spustí se kód ve složených závorkách.</li>
+                <li>Provede se krok <code>i++</code> (zvýšení o 1).</li>
+                <li>Znovu se zkontroluje podmínka (bod 2)...</li>
+            </ol>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 3: Trest po škole</h2>
+            <p>Bart Simpson je po škole a musí napsat 50x na tabuli "Už nikdy nebudu házet křídou".</p>
+            <ol>
+                <li>Napište cyklus <code>for</code>.</li>
+                <li>Nastavte počátek, podmínku a krok cyklu tak, aby kód uvnitř proběhl přesně 50krát.</li>
+                <li>V těle cyklu vypište požadovaný text do konzole.</li>
+                <li><strong>Bonus:</strong> Zařiďte, aby se před každým textem vypsalo i jeho pořadové číslo (např. "1. Už nikdy...", "2. Už nikdy...").</li>
+            </ol>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 6: POLE A ALGORITMY
+        =========================================== -->
+        <div class="slide">
+            <h2>Pole (Arrays) - Seznamy 🥞</h2>
+            <p>Co když máme ve třídě 30 studentů? Nebudeme tvořit 30 proměnných (student1, student2...). Vytvoříme <strong>Pole</strong>.</p>
+            <p>Pole je jeden seznam, který drží více hodnot pohromadě v hranatých závorkách.</p>
+            <pre><code>let zaci = ["Petr", "Jana", "Karel", "Eva"];
+let znamek = [1, 3, 2, 1, 5, 4];</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Indexy (Počítáme od nuly!)</h2>
+            <p>Jak vytáhneme data z pole? Pomocí jejich pořadí, tzv. <strong>Indexu</strong>.</p>
+            <p>⚠️ <strong>Programátoři začínají počítat od 0, ne od 1!</strong></p>
+            <pre><code>let zaci = ["Petr", "Jana", "Karel"];
+
+console.log(zaci[0]); // Vypíše: Petr
+console.log(zaci[1]); // Vypíše: Jana
+console.log(zaci[2]); // Vypíše: Karel
+console.log(zaci[3]); // undefined (Takový prvek tam není!)</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Práce s polem (Metody)</h2>
+            <p>Pole umí spoustu triků.</p>
+            <pre><code>let nakup = ["Mléko", "Chleba"];
+
+// .length zjistí délku (počet prvků) pole. Tady to bude číslo 2.
+console.log(nakup.length); 
+
+// .push() přidá prvek nakonec
+nakup.push("Máslo"); // Pole je nyní ["Mléko", "Chleba", "Máslo"]
+
+// .pop() odstraní a vrátí poslední prvek
+nakup.pop(); // Odstraní "Máslo"</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Cyklus + Pole = Dokonalý pár 💑</h2>
+            <p>Toto je absolutní základ programování. Jak projít všechny prvky v poli, ať jich je tam 5, nebo milion?</p>
+            <pre><code>let teploty = [15, 20, 18, 22];
+
+// Začínáme od indexu 0. Jedeme, dokud nedojdeme na konec pole (length)
+for (let i = 0; i < teploty.length; i++) {
+    // Vezmeme prvek na aktuálním indexu 'i'
+    console.log("Dnešní teplota je: " + teploty[i]);
+}</code></pre>
+            <p>Všimněte si podmínky <code>i &lt; teploty.length</code>. Je to ostře menší (<code>&lt;</code>), protože poslední index u pole o délce 4 je 3 (0,1,2,3).</p>
+        </div>
+
+        <div class="slide">
+            <h2>Moderní procházení: for...of (jako foreach) ✨</h2>
+            <p>Klasický <code>for</code> cyklus s indexem <code>i</code> je základ, ale psát ho pořád dokola je otrava. Pro jednoduché procházení polí existují kratší cesty.</p>
+            <pre><code>let zaci = ["Petr", "Jana", "Karel"];
+
+// 1. Zápis "for...of" (čte se: pro každého 'zaka' z pole 'zaci')
+for (let zak of zaci) {
+    console.log("Jméno: " + zak);
+}
+
+// 2. Metoda .forEach() (dělá v podstatě to samé)
+zaci.forEach(function(zak) {
+    console.log("Jméno: " + zak);
+});</code></pre>
+            <p>Pokud nepotřebujete znát přesnou pozici (<strong>index</strong>) prvku v poli, ale stačí vám jen jeho hodnota, <code>for...of</code> je nejčistší a nejrychlejší volba!</p>
+        </div>
+
+        <div class="slide">
+            <h2>Algoritmizace: Součet prvků v poli</h2>
+            <p>Jak spočítat průměrnou známku? Nejdřív je musíme sečíst. Ukážeme si myšlenkový postup počítače.</p>
+            <pre><code>let znamky = [1, 2, 5, 2];
+let soucet = 0; // Pomocná proměnná pro ukládání průběžného stavu
+
+for (let i = 0; i < znamky.length; i++) {
+    soucet = soucet + znamky[i]; // Přičteme aktuální známku do součtu
+}
+
+console.log("Celkový součet je: " + soucet); // 10
+console.log("Průměr je: " + soucet / znamky.length); // 2.5</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Algoritmizace: Hledání maxima 🏔️</h2>
+            <p>Jak byste hledali nejvyšší kartu v balíčku? Vezmete první, a pak každou další s ní porovnáte. Pokud je nová karta větší, tu původní zahodíte a držíte si novou.</p>
+            <pre><code>let cisla = [4, 12, 5, 22, 8];
+
+// Předpokládáme na začátku, že maximum je hned to první číslo
+let maximum = cisla[0]; 
+
+for (let i = 1; i < cisla.length; i++) {
+    if (cisla[i] > maximum) {
+        // Našli jsme větší číslo! Uložíme si ho.
+        maximum = cisla[i];
+    }
+}
+console.log("Největší číslo je: " + maximum); // 22</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 4: Hledání minima</h2>
+            <p>Máte pole útrat na eshopu za poslední dny: <code>let utraty = [450, 120, 890, 50, 300];</code></p>
+            <ol>
+                <li>Vytvořte si toto pole v kódu.</li>
+                <li>Vytvořte proměnnou <code>minimum</code> a vložte do ní první prvek pole (index 0).</li>
+                <li>Napište cyklus <code>for</code> pro projití zbytku pole.</li>
+                <li>Uvnitř cyklu dejte podmínku: Pokud je aktuální prvek pole <strong>menší</strong> než dosavadní <code>minimum</code>, uložte tento nový prvek do proměnné <code>minimum</code>.</li>
+                <li>Po skončení cyklu vypište nalezené minimum. Mělo by to být 50.</li>
+            </ol>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 7: FUNKCE A OBJEKTY
+        =========================================== -->
+        <div class="slide">
+            <h2>Funkce (Functions) ⚙️</h2>
+            <p>Funkce je znovupoužitelný kus kódu. Je to jako "továrna" - zabalíte do ní určitý proces, dáte jí jméno, a pak ji jen voláte, kdykoliv potřebujete.</p>
+            <pre><code>// 1. DEKLARACE (vytvoření továrny)
+function pozdrav() {
+    console.log("Ahoj, vítám tě tu!");
+}
+
+// 2. VOLÁNÍ FUNKCE (spuštění továrny)
+pozdrav(); // Vypíše: Ahoj...
+pozdrav(); // Vypíše to znovu</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Parametry a Argumenty (Vstupy do továrny)</h2>
+            <p>Funkce může přijímat data zvenčí. Těmto zástupným názvům říkáme Parametry.</p>
+            <pre><code>// 'jmeno' a 'vek' jsou PARAMETRY
+function pozdravCloveka(jmeno, vek) {
+    console.log("Ahoj " + jmeno + ", je ti " + vek + " let.");
+}
+
+// Při volání tam pošleme reálná data (ARGUMENTY)
+pozdravCloveka("Karle", 25);
+pozdravCloveka("Jano", 30);</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Return (Výstup z továrny)</h2>
+            <p>Funkce často nepotřebuje něco vypisovat. Chceme po ní, aby něco spočítala a <strong>vrátila výsledek zpět</strong>, abychom s ním mohli dál pracovat.</p>
+            <pre><code>function secti(a, b) {
+    let vysledek = a + b;
+    return vysledek; // Vrací hodnotu ven z funkce
+    // console.log("Toto se nikdy nestane, return funkci ukončí");
+}
+
+let x = secti(10, 5); // x bude mít hodnotu 15
+let y = secti(20, 2); // y bude 22
+
+console.log(x * y); // S výsledky můžeme normálně počítat dál</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 5: Obsah obdélníku</h2>
+            <p>Napište funkci na výpočet obsahu.</p>
+            <ol>
+                <li>Vytvořte funkci s názvem <code>obsahObdelniku</code>.</li>
+                <li>Funkce bude mít dva parametry: <code>sirka</code> a <code>vyska</code>.</li>
+                <li>Uvnitř funkce spočítejte obsah (šířka * výška).</li>
+                <li>Použijte klíčové slovo <code>return</code> pro vrácení výsledku.</li>
+                <li>Zavolejte funkci s čísly 5 a 10, uložte výsledek do proměnné a tu vypište. Výsledek by měl být 50.</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>Objekty (Objects) - Úvod</h2>
+            <p>Zatímco <strong>Pole</strong> je seznam hodnot, <strong>Objekt</strong> je balíček vlastností, které popisují jednu věc (např. jednoho uživatele, jedno auto).</p>
+            <p>Objekty se zapisují do složených závorek <code>{}</code> jako páry "klíč: hodnota".</p>
+            <pre><code>let student = {
+    jmeno: "Lukáš",
+    vek: 20,
+    studujeIT: true,
+    znamky: [1, 2, 1, 3]
+};</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Práce s objekty</h2>
+            <p>K vlastnostem objektu přistupujeme pomocí <strong>tečkové notace</strong>.</p>
+            <pre><code>let auto = {
+    znacka: "Škoda",
+    model: "Octavia",
+    barva: "černá"
+};
+
+console.log(auto.znacka); // Vypíše: Škoda
+
+auto.barva = "červená"; // Změna hodnoty vlastnosti
+auto.rokVyroby = 2020;  // Přidání úplně nové vlastnosti</code></pre>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 8: DOM A INTERAKTIVITA
+        =========================================== -->
+        <div class="slide">
+            <h2>Sbohem Konzole, Vítej DOM! 🕸️</h2>
+            <p>Konečně! Nyní vezmeme všechnu naši logiku a propojíme ji s HTML stránkou.</p>
+            <p>Co je to <strong>DOM (Document Object Model)</strong>?</p>
+            <ul>
+                <li>Prohlížeč načte vaše HTML a vytvoří z něj obrovský JavaScriptový objekt (stromovou strukturu).</li>
+                <li>Díky tomu můžeme pomocí JS hledat elementy, měnit texty, přidávat CSS třídy nebo odchytávat kliknutí.</li>
+                <li>Začínáme magickým slovem <code>document</code>.</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>1. Výběr (Hledání) elementů</h2>
+            <p>Než můžeme s HTML tagem něco udělat, musíme ho v JS "chytit".</p>
+            <pre><code>// HTML: &lt;h1 id="hlavni-nadpis"&gt;Starý text&lt;/h1&gt;
+
+// Chytneme element podle jeho ID
+let nadpis = document.getElementById("hlavni-nadpis");
+
+// Nebo modernější způsob (jako CSS selektory):
+let tlacitko = document.querySelector(".moje-trida");
+let vsechnyOdstavce = document.querySelectorAll("p");</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>2. Manipulace s elementy</h2>
+            <p>Máme element uložený v proměnné. Co s ním zmůžeme?</p>
+            <pre><code>let nadpis = document.getElementById("nadpis");
+
+// Změna textu uvnitř tagu
+nadpis.textContent = "Zcela nový text generovaný JS!";
+
+// Úprava CSS stylů (v JS se CSS vlastnosti píší camelCase)
+nadpis.style.color = "red";
+nadpis.style.backgroundColor = "black";
+nadpis.style.fontSize = "3rem";
+
+// Úprava HTML tříd (Nejlepší způsob)
+nadpis.classList.add("skryty"); 
+nadpis.classList.remove("skryty");</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>3. Události (Events) 🖱️</h2>
+            <p>Jak zařídit, aby se něco stalo AŽ po kliknutí na tlačítko?</p>
+            <p>Potřebujeme k elementu "přilepit ucho", které poslouchá, zda se něco nestalo. K tomu slouží <code>addEventListener</code>.</p>
+            <pre><code>// HTML: &lt;button id="btn-klik"&gt;Klikni&lt;/button&gt;
+
+let tlacitko = document.getElementById("btn-klik");
+
+// Posloucháme událost "click" a po kliknutí spustíme funkci
+tlacitko.addEventListener("click", function() {
+    alert("Kliknutí funguje!");
+    document.body.style.backgroundColor = "pink";
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Kompletní příklad: Počítadlo</h2>
+            <p>Propojíme proměnné, DOM a Události v jednu aplikaci.</p>
+            <pre><code>// HTML:
+// &lt;p id="cislo"&gt;0&lt;/p&gt;
+// &lt;button id="plus"&gt;Přidej&lt;/button&gt;
+
+let stavPocitadla = 0; // Pamatuje si stav
+let textCisla = document.getElementById("cislo");
+let btnPlus = document.getElementById("plus");
+
+btnPlus.addEventListener("click", function() {
+    stavPocitadla++; // Zvýšíme logickou hodnotu
+    textCisla.textContent = stavPocitadla; // Propíšeme to do HTML
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Získávání hodnot z formulářů (Inputů)</h2>
+            <p>Pokud chcete načíst text z HTML <code>&lt;input&gt;</code>, nepoužijete <code>textContent</code>, ale vlastnost <code>value</code>.</p>
+            <pre><code>// HTML: &lt;input type="text" id="jmeno-input"&gt;
+// &lt;button id="ulozit"&gt;Uložit&lt;/button&gt;
+
+let pole = document.getElementById("jmeno-input");
+let tlacitko = document.getElementById("ulozit");
+
+tlacitko.addEventListener("click", function() {
+    let zadanyText = pole.value; // Přečte, co uživatel napsal
+    console.log("Uživatel napsal: " + zadanyText);
+    
+    // Vyčištění políčka po kliknutí
+    pole.value = ""; 
+});</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Závěrečný boss: Vlastní to-do / list</h2>
+            <p>Zkuste si postavit zárodek To-Do listu (bez HTML pro teď, jen promyslete logiku).</p>
+            <ol>
+                <li>V HTML by byl <code>input</code>, <code>button</code> a prázdný <code>ul</code> (seznam).</li>
+                <li>V JS zachytíte kliknutí na tlačítko.</li>
+                <li>Přečtete <code>value</code> z inputu.</li>
+                <li>Do proměnné typu pole (<code>let ukoly = []</code>) přidáte přes <code>.push()</code> nový úkol.</li>
+                <li>(Pokročilé) - Vložíte novou položku do HTML pomocí modifikace DOMu (např. <code>seznam.innerHTML += "&lt;li&gt;" + zadanyText + "&lt;/li&gt;"</code>).</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>Co jsme se naučili? 🎓</h2>
+            <p>Máte za sebou obrovský kus práce.</p>
+            <ul>
+                <li>Víte, jak ukládat data do proměnných (let/const) a typů (Number, String).</li>
+                <li>Víte, jak nechat program se rozhodovat (if/else).</li>
+                <li>Víte, jak nechat počítač dřít místo vás pomocí cyklů (for, while).</li>
+                <li>Znáte pole (Arrays) a jak v nich hledat.</li>
+                <li>Rozumíte funkcím (továrnám na kód).</li>
+                <li>Dokážete propojit JS s HTML a reagovat na klikání uživatele.</li>
+            </ul>
+            <p><strong>Nyní je čas programovat, dělat chyby, opravovat je a učit se dál!</strong></p>
+        </div>
+
+    </div>
+
+    <!-- --- JAVASCRIPT LOGIKA PREZENTACE --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const progressBar = document.getElementById('progress-bar');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlideIndex = 0;
+
+            // Zkontrolujeme, zda v URL není hash (např. #slide-5) pro načtení správného slidu po refreshnutí
+            const hash = window.location.hash;
+            if (hash) {
+                const match = hash.match(/#slide-(\d+)/);
+                if (match) {
+                    const idx = parseInt(match[1]) - 1;
+                    if (idx >= 0 && idx < slides.length) {
+                        currentSlideIndex = idx;
+                    }
+                }
+            }
+
+            function updatePresentation() {
+                // Aktualizujeme URL bez znovunačtení stránky (dobré pro refreshe)
+                history.replaceState(null, null, `#slide-${currentSlideIndex + 1}`);
+
+                // Aktualizace CSS tříd pro animace (doleva/doprava)
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'previous');
+                    if (index === currentSlideIndex) {
+                        slide.classList.add('active');
+                    } else if (index < currentSlideIndex) {
+                        slide.classList.add('previous');
+                    }
+                });
+
+                // Aktualizace Progress Baru
+                const progressPercentage = (currentSlideIndex / (slides.length - 1)) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                // Aktualizace počítadla
+                slideCounter.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+            }
+
+            // Navigace klávesnicí
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') { // Šipka vpravo nebo Mezerník
+                    if (currentSlideIndex < slides.length - 1) {
+                        currentSlideIndex++;
+                        updatePresentation();
+                    }
+                } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') { // Šipka vlevo nebo Backspace
+                    if (currentSlideIndex > 0) {
+                        currentSlideIndex--;
+                        updatePresentation();
+                    }
+                }
+            });
+
+            // Inicializace na startu
+            updatePresentation();
+        });
+    </script>
+</body>
+</html>
