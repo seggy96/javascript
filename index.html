@@ -9,11 +9,11 @@
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600;800&display=swap');
 
         :root {
-            --bg-color: #0f172a; /* Tmavě modrá/břidlicová */
+            --bg-color: #0f172a;
             --text-color: #e2e8f0;
-            --accent-primary: #38bdf8; /* Světle modrá JS */
-            --accent-secondary: #facc15; /* Žlutá JS */
-            --exercise-bg: #14532d; /* Tmavě zelená pro cvičení */
+            --accent-primary: #38bdf8;
+            --accent-secondary: #facc15;
+            --exercise-bg: #14532d;
             --exercise-border: #4ade80;
             --code-bg: #1e293b;
             --code-text: #a5b4fc;
@@ -29,14 +29,13 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow: hidden; /* Zabrání scrollování, funguje jako prezentace */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
             display: flex;
             flex-direction: column;
         }
 
-        /* UI Prvky */
         #progress-container {
             width: 100%;
             height: 6px;
@@ -67,7 +66,6 @@
             border-radius: 20px;
         }
 
-        /* Kontejner slidů */
         #presentation-area {
             flex-grow: 1;
             display: flex;
@@ -77,13 +75,12 @@
             padding: 2rem;
         }
 
-        /* Samotný slide */
         .slide {
             position: absolute;
             width: 100%;
             max-width: 1000px;
             max-height: 90vh;
-            overflow-y: auto; /* Kdyby bylo moc textu, slide lze scrollovat */
+            overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transform: translateX(50px);
@@ -92,7 +89,6 @@
             border-radius: 16px;
         }
 
-        /* Ostranění scrollbaru pro hezčí vzhled */
         .slide::-webkit-scrollbar { width: 8px; }
         .slide::-webkit-scrollbar-track { background: transparent; }
         .slide::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
@@ -107,7 +103,6 @@
             transform: translateX(-50px);
         }
 
-        /* Typografie */
         h1 {
             font-size: 3.5rem;
             color: var(--accent-secondary);
@@ -153,7 +148,6 @@
             border-radius: 4px;
         }
 
-        /* Kód */
         pre {
             background-color: var(--code-bg);
             padding: 20px;
@@ -168,10 +162,10 @@
             font-family: 'Fira Code', monospace;
             font-size: 1.3rem;
             color: var(--code-text);
-            font-variant-ligatures: none; /* Vypne spojování znaků jako === do jedné čáry */
+            font-variant-ligatures: none;
         }
 
-        /* Specifický styl pro cvičení */
+        /* Standardní cvičení - Zelená */
         .slide.exercise {
             background-color: var(--exercise-bg);
             border: 2px solid var(--exercise-border);
@@ -188,7 +182,23 @@
             background-color: #064e3b;
         }
 
-        /* Zvýraznění (Hints) */
+        /* EXTRA cvičení - Zlato-oranžová */
+        .slide.extra {
+            background-color: #451a03; 
+            border: 2px solid #f59e0b; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide.extra h2 {
+            color: #f59e0b;
+            border-bottom-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .slide.extra pre {
+            border-left-color: #f59e0b;
+            background-color: #291304;
+        }
+
         .hint {
             margin-top: 2rem;
             padding: 15px;
@@ -221,7 +231,7 @@
                 <li>Dnes běží všude: v prohlížeči, na serverech, v mobilech i v chytrých hodinkách.</li>
                 <li>Začneme od základů logiky, ne od barviček na webu.</li>
             </ul>
-            <div class="hint">Ovládání: Šipka doprava ➡️ (nebo Mezerník) pro další slide. Šipka doleva ⬅️ pro návrat.</div>
+            <div class="hint">Ovládání: Šipka doprava ➡️ (nebo Mezerník) pro další slide. Šipka doleva ⬅️ pro návrat. Přejeďte myší přes pravou stranu nebo klikněte dovnitř, aby fungovaly klávesy.</div>
         </div>
 
         <div class="slide">
@@ -360,18 +370,6 @@ let pocetRohlíku = Number(prompt("Kolik chceš rohlíků?"));</code></pre>
         </div>
 
         <div class="slide">
-            <h2>C# vs. JavaScript: Kde je int a float? 🤔</h2>
-            <p>Pokud znáte jiné jazyky (třeba C#), možná jste zvyklí, že <code>5 / 2 = 2</code> (celočíselné dělení).</p>
-            <p><strong>V JavaScriptu to tak NENÍ.</strong> JS má jen jeden typ pro čísla (<code>Number</code>) a všechno počítá s desetinnými místy.</p>
-            <pre><code>let vysledek = 5 / 2;
-console.log(vysledek); // Vypíše rovnou 2.5!
-
-// Co když chci celočíselné dělení? Musím zaokrouhlit:
-let celeCislo = Math.floor(5 / 2); 
-console.log(celeCislo); // Vypíše 2</code></pre>
-        </div>
-
-        <div class="slide">
             <h2>Tajemný operátor: Modulo <code>%</code></h2>
             <p>Modulo vrací <strong>zbytek po celočíselném dělení</strong>. Je to nesmírně důležitý nástroj v programování.</p>
             <pre><code>let zbytek = 10 % 3; 
@@ -412,20 +410,6 @@ if (body >= 90) {
 } else {
     console.log("Propadas, uvidíme se v září.");
 }</code></pre>
-            <p>Počítač čte podmínky odshora. Jakmile najde první pravdivou, vykoná ji a zbytek přeskočí.</p>
-        </div>
-
-        <div class="slide">
-            <h2>Porovnávací operátory</h2>
-            <p>Jak můžeme věci porovnávat?</p>
-            <ul>
-                <li><code>&gt;</code> Větší než</li>
-                <li><code>&lt;</code> Menší než</li>
-                <li><code>&gt;=</code> Větší nebo rovno</li>
-                <li><code>&lt;=</code> Menší nebo rovno</li>
-                <li><code>===</code> Rovná se (Přesná shoda hodnoty i typu!)</li>
-                <li><code>!==</code> Nerovná se</li>
-            </ul>
         </div>
 
         <div class="slide">
@@ -450,19 +434,6 @@ if (body >= 90) {
             </ol>
         </div>
 
-        <div class="slide">
-            <h2>Logické operátory (A zároveň, Nebo)</h2>
-            <p>Často potřebujeme splnit více podmínek najednou.</p>
-            <ul>
-                <li><code>&&</code> (A zároveň - AND): Obě strany musí být pravdivé.<br>
-                    <code>if (vek >= 18 && maPenize === true) { ... }</code></li>
-                <li><code>||</code> (Nebo - OR): Stačí, aby platila alespoň jedna strana. (Znak se píše pravý Alt + W).<br>
-                    <code>if (den === "Sobota" || den === "Neděle") { console.log("Je víkend!"); }</code></li>
-                <li><code>!</code> (Negace - NOT): Obrátí pravdu na nepravdu a naopak.<br>
-                    <code>if (!jePlnolety) { console.log("Je nezletilý."); }</code></li>
-            </ul>
-        </div>
-
         <!-- ==========================================
              ČÁST 5: CYKLY (LOOPS)
         =========================================== -->
@@ -480,21 +451,9 @@ if (body >= 90) {
 
 while (pocitadlo <= 5) {
     console.log("Číslo je: " + pocitadlo);
-    pocitadlo = pocitadlo + 1; // Zásadní krok! Zvýšení hodnoty.
-}
-// Vypíše čísla 1, 2, 3, 4, 5</code></pre>
-            <p>⚠️ <strong>Pozor na nekonečné cykly!</strong> Pokud zapomenete přičíst (změnit stav) uvnitř cyklu, podmínka bude platit navždy a prohlížeč "zamrzne".</p>
-        </div>
-
-        <div class="slide">
-            <h2>Zkrácené zápisy (Inkrementace)</h2>
-            <p>Místo <code>pocitadlo = pocitadlo + 1;</code> existují zkratky, které programátoři milují.</p>
-            <ul>
-                <li><code>pocitadlo += 1;</code> (Zvyš stávající hodnotu o 1)</li>
-                <li><code>pocitadlo += 5;</code> (Zvyš stávající hodnotu o 5)</li>
-                <li><code>pocitadlo++;</code> (Tzv. inkrementace. Zvyš přesně o 1. Úplně nejkratší zápis.)</li>
-                <li><code>pocitadlo--;</code> (Dekrementace. Sniž o 1.)</li>
-            </ul>
+    pocitadlo++; // Zásadní krok! Zvýšení hodnoty.
+}</code></pre>
+            <p>⚠️ <strong>Pozor na nekonečné cykly!</strong> Pokud zapomenete uvnitř cyklu počítadlo zvýšit, podmínka bude platit navždy a prohlížeč "zamrzne".</p>
         </div>
 
         <div class="slide">
@@ -504,13 +463,6 @@ while (pocitadlo <= 5) {
 for (let i = 1; i <= 10; i++) {
     console.log(i);
 }</code></pre>
-            <p>Jak to funguje:</p>
-            <ol>
-                <li>Vytvoří se proměnná <code>i</code> (zkratka pro index) s hodnotou 1. (Provede se jen jednou na začátku).</li>
-                <li>Zkontroluje se, zda je <code>i &lt;= 10</code>. Pokud ano, spustí se kód ve složených závorkách.</li>
-                <li>Provede se krok <code>i++</code> (zvýšení o 1).</li>
-                <li>Znovu se zkontroluje podmínka (bod 2)...</li>
-            </ol>
         </div>
 
         <div class="slide exercise">
@@ -548,18 +500,31 @@ console.log(zaci[3]); // undefined (Takový prvek tam není!)</code></pre>
         </div>
 
         <div class="slide">
-            <h2>Práce s polem (Metody)</h2>
-            <p>Pole umí spoustu triků.</p>
-            <pre><code>let nakup = ["Mléko", "Chleba"];
+            <h2>Přidávání a odebírání (Push & Pop)</h2>
+            <p>Pole nejsou statická. Můžeme do nich za běhu programu přidávat nové prvky nebo je mazat. Používáme na to tzv. metody.</p>
+            <pre><code>let kosik = ["Mléko", "Chleba"];
 
-// .length zjistí délku (počet prvků) pole. Tady to bude číslo 2.
-console.log(nakup.length); 
+// 1. PUSH: Přidá nový prvek na KONEC pole
+kosik.push("Máslo"); 
+console.log(kosik); // ["Mléko", "Chleba", "Máslo"]
 
-// .push() přidá prvek nakonec
-nakup.push("Máslo"); // Pole je nyní ["Mléko", "Chleba", "Máslo"]
+// 2. POP: Odebere POSLEDNÍ prvek z pole
+let odebranaPolozka = kosik.pop(); 
+console.log(kosik); // ["Mléko", "Chleba"]
+console.log("Odebral jsem:", odebranaPolozka); // Odebral jsem: Máslo</code></pre>
+            <p>Představte si to jako balíček karet. <code>push()</code> položí kartu na vrch, <code>pop()</code> z vrchu kartu vezme.</p>
+        </div>
 
-// .pop() odstraní a vrátí poslední prvek
-nakup.pop(); // Odstraní "Máslo"</code></pre>
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 4: Playlist a fronta</h2>
+            <p>Vytvoříme si jednoduchou logiku přehrávače písniček.</p>
+            <ol>
+                <li>Vytvořte pole <code>playlist</code> se třemi názvy písniček.</li>
+                <li>Uživatel si přidal novou písničku. Pomocí <code>push()</code> ji přidejte do pole.</li>
+                <li>Vypište do konzole celkovou délku playlistu (použijte vlastnost <code>.length</code>).</li>
+                <li>Přehrávač dohrál poslední písničku a má ji smazat ze seznamu. Použijte <code>pop()</code>.</li>
+                <li>Vypište do konzole finální podobu playlistu.</li>
+            </ol>
         </div>
 
         <div class="slide">
@@ -567,72 +532,10 @@ nakup.pop(); // Odstraní "Máslo"</code></pre>
             <p>Toto je absolutní základ programování. Jak projít všechny prvky v poli, ať jich je tam 5, nebo milion?</p>
             <pre><code>let teploty = [15, 20, 18, 22];
 
-// Začínáme od indexu 0. Jedeme, dokud nedojdeme na konec pole (length)
+// Začínáme od indexu 0. Jedeme, dokud nedojdeme na konec pole
 for (let i = 0; i < teploty.length; i++) {
-    // Vezmeme prvek na aktuálním indexu 'i'
     console.log("Dnešní teplota je: " + teploty[i]);
 }</code></pre>
-            <p>Všimněte si podmínky <code>i &lt; teploty.length</code>. Je to ostře menší (<code>&lt;</code>), protože poslední index u pole o délce 4 je 3 (0,1,2,3).</p>
-        </div>
-
-        <div class="slide">
-            <h2>Moderní procházení: for...of (jako foreach) ✨</h2>
-            <p>Klasický <code>for</code> cyklus s indexem <code>i</code> je základ, ale psát ho pořád dokola je otrava. Pro jednoduché procházení polí existují kratší cesty.</p>
-            <pre><code>let zaci = ["Petr", "Jana", "Karel"];
-
-// 1. Zápis "for...of" (čte se: pro každého 'zaka' z pole 'zaci')
-for (let zak of zaci) {
-    console.log("Jméno: " + zak);
-}
-
-// 2. Metoda .forEach() (dělá v podstatě to samé)
-zaci.forEach(function(zak) {
-    console.log("Jméno: " + zak);
-});</code></pre>
-            <p>Pokud nepotřebujete znát přesnou pozici (<strong>index</strong>) prvku v poli, ale stačí vám jen jeho hodnota, <code>for...of</code> je nejčistší a nejrychlejší volba!</p>
-        </div>
-
-        <div class="slide">
-            <h2>Algoritmizace: Součet prvků v poli</h2>
-            <p>Jak spočítat průměrnou známku? Nejdřív je musíme sečíst. Ukážeme si myšlenkový postup počítače.</p>
-            <pre><code>let znamky = [1, 2, 5, 2];
-let soucet = 0; // Pomocná proměnná pro ukládání průběžného stavu
-
-for (let i = 0; i < znamky.length; i++) {
-    soucet = soucet + znamky[i]; // Přičteme aktuální známku do součtu
-}
-
-console.log("Celkový součet je: " + soucet); // 10
-console.log("Průměr je: " + soucet / znamky.length); // 2.5</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>Algoritmizace: Hledání maxima 🏔️</h2>
-            <p>Jak byste hledali nejvyšší kartu v balíčku? Vezmete první, a pak každou další s ní porovnáte. Pokud je nová karta větší, tu původní zahodíte a držíte si novou.</p>
-            <pre><code>let cisla = [4, 12, 5, 22, 8];
-
-// Předpokládáme na začátku, že maximum je hned to první číslo
-let maximum = cisla[0]; 
-
-for (let i = 1; i < cisla.length; i++) {
-    if (cisla[i] > maximum) {
-        // Našli jsme větší číslo! Uložíme si ho.
-        maximum = cisla[i];
-    }
-}
-console.log("Největší číslo je: " + maximum); // 22</code></pre>
-        </div>
-
-        <div class="slide exercise">
-            <h2>🏋️ Cvičení 4: Hledání minima</h2>
-            <p>Máte pole útrat na eshopu za poslední dny: <code>let utraty = [450, 120, 890, 50, 300];</code></p>
-            <ol>
-                <li>Vytvořte si toto pole v kódu.</li>
-                <li>Vytvořte proměnnou <code>minimum</code> a vložte do ní první prvek pole (index 0).</li>
-                <li>Napište cyklus <code>for</code> pro projití zbytku pole.</li>
-                <li>Uvnitř cyklu dejte podmínku: Pokud je aktuální prvek pole <strong>menší</strong> než dosavadní <code>minimum</code>, uložte tento nový prvek do proměnné <code>minimum</code>.</li>
-                <li>Po skončení cyklu vypište nalezené minimum. Mělo by to být 50.</li>
-            </ol>
         </div>
 
         <!-- ==========================================
@@ -640,72 +543,32 @@ console.log("Největší číslo je: " + maximum); // 22</code></pre>
         =========================================== -->
         <div class="slide">
             <h2>Funkce (Functions) ⚙️</h2>
-            <p>Funkce je znovupoužitelný kus kódu. Je to jako "továrna" - zabalíte do ní určitý proces, dáte jí jméno, a pak ji jen voláte, kdykoliv potřebujete.</p>
+            <p>Funkce je znovupoužitelný kus kódu. Je to "továrna" - zabalíte do ní určitý proces, dáte jí jméno, a pak ji jen voláte.</p>
             <pre><code>// 1. DEKLARACE (vytvoření továrny)
-function pozdrav() {
-    console.log("Ahoj, vítám tě tu!");
-}
-
-// 2. VOLÁNÍ FUNKCE (spuštění továrny)
-pozdrav(); // Vypíše: Ahoj...
-pozdrav(); // Vypíše to znovu</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>Parametry a Argumenty (Vstupy do továrny)</h2>
-            <p>Funkce může přijímat data zvenčí. Těmto zástupným názvům říkáme Parametry.</p>
-            <pre><code>// 'jmeno' a 'vek' jsou PARAMETRY
 function pozdravCloveka(jmeno, vek) {
     console.log("Ahoj " + jmeno + ", je ti " + vek + " let.");
 }
 
-// Při volání tam pošleme reálná data (ARGUMENTY)
+// 2. VOLÁNÍ FUNKCE (spuštění s reálnými daty)
 pozdravCloveka("Karle", 25);
 pozdravCloveka("Jano", 30);</code></pre>
         </div>
 
         <div class="slide">
-            <h2>Return (Výstup z továrny)</h2>
-            <p>Funkce často nepotřebuje něco vypisovat. Chceme po ní, aby něco spočítala a <strong>vrátila výsledek zpět</strong>, abychom s ním mohli dál pracovat.</p>
-            <pre><code>function secti(a, b) {
-    let vysledek = a + b;
-    return vysledek; // Vrací hodnotu ven z funkce
-    // console.log("Toto se nikdy nestane, return funkci ukončí");
-}
-
-let x = secti(10, 5); // x bude mít hodnotu 15
-let y = secti(20, 2); // y bude 22
-
-console.log(x * y); // S výsledky můžeme normálně počítat dál</code></pre>
-        </div>
-
-        <div class="slide exercise">
-            <h2>🏋️ Cvičení 5: Obsah obdélníku</h2>
-            <p>Napište funkci na výpočet obsahu.</p>
-            <ol>
-                <li>Vytvořte funkci s názvem <code>obsahObdelniku</code>.</li>
-                <li>Funkce bude mít dva parametry: <code>sirka</code> a <code>vyska</code>.</li>
-                <li>Uvnitř funkce spočítejte obsah (šířka * výška).</li>
-                <li>Použijte klíčové slovo <code>return</code> pro vrácení výsledku.</li>
-                <li>Zavolejte funkci s čísly 5 a 10, uložte výsledek do proměnné a tu vypište. Výsledek by měl být 50.</li>
-            </ol>
-        </div>
-
-        <div class="slide">
             <h2>Objekty (Objects) - Úvod</h2>
-            <p>Zatímco <strong>Pole</strong> je seznam hodnot, <strong>Objekt</strong> je balíček vlastností, které popisují jednu věc (např. jednoho uživatele, jedno auto).</p>
+            <p>Zatímco <strong>Pole</strong> je seznam hodnot, <strong>Objekt</strong> je balíček vlastností, které detailně popisují jednu věc.</p>
             <p>Objekty se zapisují do složených závorek <code>{}</code> jako páry "klíč: hodnota".</p>
             <pre><code>let student = {
     jmeno: "Lukáš",
     vek: 20,
     studujeIT: true,
-    znamky: [1, 2, 1, 3]
+    znamky: [1, 2, 1, 3] // Objekt může obsahovat i pole!
 };</code></pre>
         </div>
 
         <div class="slide">
             <h2>Práce s objekty</h2>
-            <p>K vlastnostem objektu přistupujeme pomocí <strong>tečkové notace</strong>.</p>
+            <p>K vlastnostem objektu přistupujeme nejčastěji pomocí <strong>tečkové notace</strong>.</p>
             <pre><code>let auto = {
     znacka: "Škoda",
     model: "Octavia",
@@ -714,129 +577,156 @@ console.log(x * y); // S výsledky můžeme normálně počítat dál</code></pr
 
 console.log(auto.znacka); // Vypíše: Škoda
 
-auto.barva = "červená"; // Změna hodnoty vlastnosti
-auto.rokVyroby = 2020;  // Přidání úplně nové vlastnosti</code></pre>
-        </div>
+// Změna hodnoty vlastnosti
+auto.barva = "červená"; 
 
-        <!-- ==========================================
-             ČÁST 8: DOM A INTERAKTIVITA
-        =========================================== -->
-        <div class="slide">
-            <h2>Sbohem Konzole, Vítej DOM! 🕸️</h2>
-            <p>Konečně! Nyní vezmeme všechnu naši logiku a propojíme ji s HTML stránkou.</p>
-            <p>Co je to <strong>DOM (Document Object Model)</strong>?</p>
-            <ul>
-                <li>Prohlížeč načte vaše HTML a vytvoří z něj obrovský JavaScriptový objekt (stromovou strukturu).</li>
-                <li>Díky tomu můžeme pomocí JS hledat elementy, měnit texty, přidávat CSS třídy nebo odchytávat kliknutí.</li>
-                <li>Začínáme magickým slovem <code>document</code>.</li>
-            </ul>
-        </div>
-
-        <div class="slide">
-            <h2>1. Výběr (Hledání) elementů</h2>
-            <p>Než můžeme s HTML tagem něco udělat, musíme ho v JS "chytit".</p>
-            <pre><code>// HTML: &lt;h1 id="hlavni-nadpis"&gt;Starý text&lt;/h1&gt;
-
-// Chytneme element podle jeho ID
-let nadpis = document.getElementById("hlavni-nadpis");
-
-// Nebo modernější způsob (jako CSS selektory):
-let tlacitko = document.querySelector(".moje-trida");
-let vsechnyOdstavce = document.querySelectorAll("p");</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>2. Manipulace s elementy</h2>
-            <p>Máme element uložený v proměnné. Co s ním zmůžeme?</p>
-            <pre><code>let nadpis = document.getElementById("nadpis");
-
-// Změna textu uvnitř tagu
-nadpis.textContent = "Zcela nový text generovaný JS!";
-
-// Úprava CSS stylů (v JS se CSS vlastnosti píší camelCase)
-nadpis.style.color = "red";
-nadpis.style.backgroundColor = "black";
-nadpis.style.fontSize = "3rem";
-
-// Úprava HTML tříd (Nejlepší způsob)
-nadpis.classList.add("skryty"); 
-nadpis.classList.remove("skryty");</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>3. Události (Events) 🖱️</h2>
-            <p>Jak zařídit, aby se něco stalo AŽ po kliknutí na tlačítko?</p>
-            <p>Potřebujeme k elementu "přilepit ucho", které poslouchá, zda se něco nestalo. K tomu slouží <code>addEventListener</code>.</p>
-            <pre><code>// HTML: &lt;button id="btn-klik"&gt;Klikni&lt;/button&gt;
-
-let tlacitko = document.getElementById("btn-klik");
-
-// Posloucháme událost "click" a po kliknutí spustíme funkci
-tlacitko.addEventListener("click", function() {
-    alert("Kliknutí funguje!");
-    document.body.style.backgroundColor = "pink";
-});</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>Kompletní příklad: Počítadlo</h2>
-            <p>Propojíme proměnné, DOM a Události v jednu aplikaci.</p>
-            <pre><code>// HTML:
-// &lt;p id="cislo"&gt;0&lt;/p&gt;
-// &lt;button id="plus"&gt;Přidej&lt;/button&gt;
-
-let stavPocitadla = 0; // Pamatuje si stav
-let textCisla = document.getElementById("cislo");
-let btnPlus = document.getElementById("plus");
-
-btnPlus.addEventListener("click", function() {
-    stavPocitadla++; // Zvýšíme logickou hodnotu
-    textCisla.textContent = stavPocitadla; // Propíšeme to do HTML
-});</code></pre>
-        </div>
-
-        <div class="slide">
-            <h2>Získávání hodnot z formulářů (Inputů)</h2>
-            <p>Pokud chcete načíst text z HTML <code>&lt;input&gt;</code>, nepoužijete <code>textContent</code>, ale vlastnost <code>value</code>.</p>
-            <pre><code>// HTML: &lt;input type="text" id="jmeno-input"&gt;
-// &lt;button id="ulozit"&gt;Uložit&lt;/button&gt;
-
-let pole = document.getElementById("jmeno-input");
-let tlacitko = document.getElementById("ulozit");
-
-tlacitko.addEventListener("click", function() {
-    let zadanyText = pole.value; // Přečte, co uživatel napsal
-    console.log("Uživatel napsal: " + zadanyText);
-    
-    // Vyčištění políčka po kliknutí
-    pole.value = ""; 
-});</code></pre>
+// Přidání úplně nové vlastnosti do existujícího objektu!
+auto.rokVyroby = 2020;  </code></pre>
         </div>
 
         <div class="slide exercise">
-            <h2>🏋️ Závěrečný boss: Vlastní to-do / list</h2>
-            <p>Zkuste si postavit zárodek To-Do listu (bez HTML pro teď, jen promyslete logiku).</p>
+            <h2>🏋️ Cvičení 5: Herní postava</h2>
+            <p>Trénink práce s objekty.</p>
             <ol>
-                <li>V HTML by byl <code>input</code>, <code>button</code> a prázdný <code>ul</code> (seznam).</li>
-                <li>V JS zachytíte kliknutí na tlačítko.</li>
-                <li>Přečtete <code>value</code> z inputu.</li>
-                <li>Do proměnné typu pole (<code>let ukoly = []</code>) přidáte přes <code>.push()</code> nový úkol.</li>
-                <li>(Pokročilé) - Vložíte novou položku do HTML pomocí modifikace DOMu (např. <code>seznam.innerHTML += "&lt;li&gt;" + zadanyText + "&lt;/li&gt;"</code>).</li>
+                <li>Vytvořte objekt <code>hrac</code>. Dejte mu vlastnosti: <code>jmeno</code> (text), <code>uroven</code> (číslo 1), a <code>inventar</code> (pole se dvěma texty, např. "Meč", "Lektvar").</li>
+                <li>Vypište do konzole pouze jméno hráče.</li>
+                <li>Hráč postoupil na další úroveň. Zvyšte mu vlastnost <code>uroven</code> o 1.</li>
+                <li>Hráč našel "Štít". Použijte <code>push()</code> k přidání "Štítu" do jeho <code>inventar</code>e.</li>
+                <li>Vypište celý objekt <code>hrac</code> do konzole pro kontrolu.</li>
             </ol>
         </div>
 
+        <!-- ==========================================
+             ČÁST 8: PŘÍKLADY NA PROCVIČENÍ NA TEST
+        =========================================== -->
         <div class="slide">
-            <h2>Co jsme se naučili? 🎓</h2>
-            <p>Máte za sebou obrovský kus práce.</p>
+            <h2>Příklady na procvičení na test 🏆</h2>
+            <p>Teorii máte za sebou. Tyto úlohy slouží jako trénink na test a simulují běžné problémy z praxe (e-shopy, bankomaty, hry).</p>
             <ul>
-                <li>Víte, jak ukládat data do proměnných (let/const) a typů (Number, String).</li>
-                <li>Víte, jak nechat program se rozhodovat (if/else).</li>
-                <li>Víte, jak nechat počítač dřít místo vás pomocí cyklů (for, while).</li>
-                <li>Znáte pole (Arrays) a jak v nich hledat.</li>
-                <li>Rozumíte funkcím (továrnám na kód).</li>
-                <li>Dokážete propojit JS s HTML a reagovat na klikání uživatele.</li>
+                <li>Nehledejte složitá řešení, používejte jen to, co jsme se naučili (<code>if</code>, <code>for</code>, pole, objekty, funkce).</li>
+                <li>Pokud se zaseknete, rozdělte si problém na menší kroky.</li>
             </ul>
-            <p><strong>Nyní je čas programovat, dělat chyby, opravovat je a učit se dál!</strong></p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 1: E-shop doprava zdarma</h2>
+            <p>Píšete logiku pro nákupní košík. E-shop nabízí dopravu zdarma pro objednávky nad 1500 Kč.</p>
+            <br>
+            <p><strong>Úkol:</strong> Vytvořte proměnnou <code>cenaObjednavky</code> a dejte jí nějakou číselnou hodnotu. Napište podmínku (if/else), která do konzole vypíše buď "Doprava je zdarma!", nebo "Do dopravy zdarma chybí [X] Kč." (kde [X] je přesně dopočítaná chybějící částka).</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 2: Kontrola bezpečnosti hesla</h2>
+            <p>Uživatel se registruje a my musíme ověřit, jestli si nezvolil příliš krátké heslo.</p>
+            <br>
+            <p><strong>Úkol:</strong> Načtěte od uživatele heslo do proměnné. Napište podmínku, která zkontroluje jeho délku (vlastnost <code>.length</code> funguje i na texty!). Pokud je heslo kratší než 8 znaků, vypište varování. Jinak vypište "Heslo je v pořádku".</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 3: Odpočet k Novému roku</h2>
+            <p>Na webové stránce se má zobrazit dramatický odpočet.</p>
+            <br>
+            <p><strong>Úkol:</strong> Napište cyklus (zvolte <code>for</code> nebo <code>while</code>), který vypíše do konzole čísla sestupně od 10 do 1. Jakmile cyklus skončí, vypište na závěr "Šťastný Nový rok!".</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 4: Hodnota košíku</h2>
+            <p>V e-shopu už nemáme jen jednu částku, ale pole s cenami jednotlivých položek, které si zákazník přidal do košíku.</p>
+            <br>
+            <p><strong>Úkol:</strong> Vytvořte pole <code>ceny = [120, 50, 490, 10];</code>. Napište cyklus, který toto pole projde, všechny ceny sečte dohromady a výsledek uloží do nové proměnné <code>celkem</code>. Tu nakonec vypište.</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 5: Filtrování dospělých</h2>
+            <p>Máte seznam věků návštěvníků kina, ale film je přístupný až od 18 let. Potřebujete zjistit, kdo může dovnitř.</p>
+            <br>
+            <p><strong>Úkol:</strong> Vytvořte pole věků <code>navstevnici = [15, 22, 17, 30, 12, 18];</code> a druhé, prázdné pole <code>povoleni = []</code>. Pomocí cyklu a podmínky projděte návštěvníky, a ty, kterým je 18 a více, přidejte (push) do pole <code>povoleni</code>.</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 6: Formátování produktu (Funkce)</h2>
+            <p>Když na e-shopu vypisujete stovky produktů, nechcete HTML generovat ručně. Potřebujete na to funkci.</p>
+            <br>
+            <p><strong>Úkol:</strong> Napište funkci <code>vypisProdukt(nazev, cena)</code>. Funkce nesmí nic vypisovat do konzole, ale musí přes <code>return</code> vrátit zformátovaný text ve tvaru: <code>"Produkt: [nazev] - Cena: [cena] Kč"</code>. Zavolejte funkci a její výsledek uložte do proměnné (s klíčovým slovem <code>let</code>) a vypište.</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 7: Tiskárna štítků (Pole objektů)</h2>
+            <p>V praxi většinou nemáte pole obyčejných čísel, ale pole objektů. Zkombinujeme obojí.</p>
+            <br>
+            <p><strong>Úkol:</strong> Vytvořte pole <code>zamestnanci</code>. V něm budou dva objekty. Každý objekt bude mít vlastnost <code>jmeno</code> a <code>pozice</code> (např. "Programátor", "Grafik"). Pomocí cyklu projděte toto pole a vypište "Štítek: [jméno] - [pozice]".</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 8: Hledání nejdražší položky</h2>
+            <p>Zákazník chce na e-shopu seřadit zboží nebo najít ten nejdražší kousek.</p>
+            <br>
+            <p><strong>Úkol:</strong> Máte pole <code>hodnoty = [450, 1200, 30, 890, 5000, 200];</code>. Napište algoritmus (cyklus + podmínka), který projde celé pole a najde v něm nejvyšší číslo. To na konci vypište. (Nápověda: Na začátku si jako "dosavadní maximum" uložte první prvek pole).</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 9: Simulátor Bankomatu (Část 1)</h2>
+            <p>Pojďme naprogramovat logiku účtu.</p>
+            <br>
+            <p><strong>Úkol:</strong> Vytvořte objekt <code>ucet</code>, který má vlastnosti <code>majitel</code> a <code>zustatek</code> (např. 10000). Dále napište <strong>funkci</strong> <code>vyberPenize(castka)</code>. Tato funkce zkontroluje, zda je na účtu dostatek peněz. Pokud ano, odečte částku ze zůstatku a vypište "Úspěšný výběr". Pokud ne, vypište "Nedostatek prostředků".</p>
+        </div>
+
+        <div class="slide exercise">
+            <h2>📝 Úloha 10: Simulátor Bankomatu (Část 2)</h2>
+            <p>Bankomat si musí pamatovat historii transakcí pro výpis.</p>
+            <br>
+            <p><strong>Úkol:</strong> Rozšiřte objekt <code>ucet</code> z předchozí úlohy o vlastnost <code>historie</code>, což bude prázdné pole <code>[]</code>. Upravte funkci pro výběr tak, že pokud je výběr úspěšný, přidá (push) do pole historie text, např. "Výběr: -500". Na konci proveďte dva úspěšné výběry a vypište celou historii účtu.</p>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 9: PŘÍKLADY EXTRA (Logické hlavolamy)
+        =========================================== -->
+        <div class="slide extra">
+            <h2>Příklady EXTRA 🧠</h2>
+            <p>Tyto úlohy jsou pro ty, kteří milují logické hádanky, matematiku a hledání skrytých vzorů.</p>
+            <ul>
+                <li>Už to není jen o zápisu syntaxe. Je to o <strong>algoritmickém myšlení</strong>.</li>
+                <li>Úlohy se dají vyřešit jen za pomoci toho, co znáte, ale budete muset kombinovat cykly a podmínky velmi chytře.</li>
+                <li>Ideální pro studenty s analytickým myšlením! 🧩</li>
+            </ul>
+        </div>
+
+        <div class="slide extra">
+            <h2>🧩 EXTRA 1: Ztracená zásilka</h2>
+            <p>Máte pole čísel, které představuje ID přijatých balíků na skladě. Balíky měly přijít v přesném pořadí od nejmenšího po největší. Jeden ale cestou vypadl.</p>
+            <pre><code>let zasilky = [1, 2, 3, 4, 6, 7, 8]; // Chybí 5!</code></pre>
+            <p><strong>Úkol:</strong> Napište cyklus, který toto pole projde a zjistí, které číslo chybí. Program musí fungovat, ať už chybí 5, nebo třeba 3. Vypište: "Chybí balík číslo: [X]".</p>
+            <div class="hint">Nápověda: Pokud vezmete aktuální prvek a přičtete k němu 1, mělo by se to rovnat následujícímu prvku v poli. Co když se to nerovná?</div>
+        </div>
+
+        <div class="slide extra">
+            <h2>🧩 EXTRA 2: Zrcadlové slovo (Palindrom)</h2>
+            <p>Palindrom je slovo, které se čte stejně zleva doprava i zprava doleva (např. "radar", "kajak"). S textem (Stringem) se v JS dá pracovat podobně jako s polem – můžete ho procházet cyklem.</p>
+            <br>
+            <p><strong>Úkol:</strong> Napište funkci <code>jePalindrom(slovo)</code>. Funkce projde text od zadu dopředu, poskládá z něj nové "obrácené" slovo a porovná ho s originálem. Pokud se rovnají, vraťte `true`, jinak `false`.</p>
+            <div class="hint">Nápověda k cyklu odzadu: <code>for (let i = slovo.length - 1; i >= 0; i--)</code></div>
+        </div>
+
+        <div class="slide extra">
+            <h2>🧩 EXTRA 3: Hackování trezoru</h2>
+            <p>Máte pole s čísly (váhy závaží). Trezor se otevře pouze tehdy, když na něj položíte <strong>přesně dvě</strong> závaží, jejichž součet je roven cílové váze (např. 70).</p>
+            <pre><code>let zavazi = [10, 40, 50, 20, 80];
+let cil = 70;</code></pre>
+            <p><strong>Úkol:</strong> Najděte v poli ty dvě čísla, která dají dohromady součet 70. Vypište do konzole: "Trezor otevřen, použita závaží: [A] a [B]".</p>
+            <div class="hint">Nápověda: Budete potřebovat tzv. vnořený cyklus! Jeden <code>for</code> cyklus běží, a uvnitř něj běží další <code>for</code> cyklus, který porovnává aktuální prvek se všemi ostatními.</div>
+        </div>
+
+        <div class="slide extra">
+            <h2>🧩 EXTRA 4: Vykreslení šachovnice</h2>
+            <p>Toto je klasická programátorská úloha pro trénink představivosti a práce se zbytkem po dělení (modulo <code>%</code>).</p>
+            <br>
+            <p><strong>Úkol:</strong> Napište program, který pomocí cyklu sestaví textový řetězec připomínající šachovnici 8x8. Použijte znaky mřížky `#` a mezery ` `. Na konci každého řádku nezapomeňte přidat znak pro odřádkování <code>\n</code>.</p>
+            <pre><code># # # # 
+ # # # #
+# # # # 
+ # # # #
+...</code></pre>
+            <div class="hint">Nápověda: Sudé řádky začínají mřížkou, liché mezerou. Sudost/Lichost řádku zjistíte přes <code>radek % 2 === 0</code>. Můžete použít vnořené cykly (řádky a sloupce).</div>
         </div>
 
     </div>
@@ -849,7 +739,6 @@ tlacitko.addEventListener("click", function() {
             const slideCounter = document.getElementById('slide-counter');
             let currentSlideIndex = 0;
 
-            // Zkontrolujeme, zda v URL není hash (např. #slide-5) pro načtení správného slidu po refreshnutí
             const hash = window.location.hash;
             if (hash) {
                 const match = hash.match(/#slide-(\d+)/);
@@ -862,10 +751,12 @@ tlacitko.addEventListener("click", function() {
             }
 
             function updatePresentation() {
-                // Aktualizujeme URL bez znovunačtení stránky (dobré pro refreshe)
-                history.replaceState(null, null, `#slide-${currentSlideIndex + 1}`);
+                try {
+                    history.replaceState(null, null, `#slide-${currentSlideIndex + 1}`);
+                } catch(e) {
+                    // Ignorujeme v preview prostředí
+                }
 
-                // Aktualizace CSS tříd pro animace (doleva/doprava)
                 slides.forEach((slide, index) => {
                     slide.classList.remove('active', 'previous');
                     if (index === currentSlideIndex) {
@@ -875,22 +766,22 @@ tlacitko.addEventListener("click", function() {
                     }
                 });
 
-                // Aktualizace Progress Baru
                 const progressPercentage = (currentSlideIndex / (slides.length - 1)) * 100;
                 progressBar.style.width = `${progressPercentage}%`;
 
-                // Aktualizace počítadla
                 slideCounter.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
             }
 
-            // Navigace klávesnicí
+            window.focus();
+            document.body.addEventListener('click', () => window.focus());
+
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight' || e.key === ' ') { // Šipka vpravo nebo Mezerník
+                if (e.key === 'ArrowRight' || e.key === ' ') {
                     if (currentSlideIndex < slides.length - 1) {
                         currentSlideIndex++;
                         updatePresentation();
                     }
-                } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') { // Šipka vlevo nebo Backspace
+                } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
                     if (currentSlideIndex > 0) {
                         currentSlideIndex--;
                         updatePresentation();
@@ -898,7 +789,6 @@ tlacitko.addEventListener("click", function() {
                 }
             });
 
-            // Inicializace na startu
             updatePresentation();
         });
     </script>
