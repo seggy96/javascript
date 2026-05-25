@@ -808,7 +808,160 @@ hrac.zautocNa(skret);  // Vypíše: Rytíř útočí! Skřet má teď 20 HP.</co
         </div>
 
         <!-- ==========================================
-             ČÁST 8: ZÁVĚR A ÚKOL
+             ČÁST 8: DOM A INTERAKTIVITA
+        =========================================== -->
+        <div class="slide">
+            <h2>Sbohem Konzole, Vítej DOM! 🕸️</h2>
+            <p>Odteď už nebudeme jen v konzoli. Začneme oživovat skutečnou webovou stránku!</p>
+            <p>Co je to <strong>DOM (Document Object Model)</strong>?</p>
+            <ul>
+                <li>Prohlížeč načte vaše HTML a vytvoří z něj obrovský JavaScriptový objekt (stromovou strukturu).</li>
+                <li><strong>Důležité:</strong> Na tyto ukázky už nefunguje Node.js ani Code Runner. Musíte mít JS propojený s HTML souborem a ten otevřít v normálním prohlížeči!</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>1. Výběr (Hledání) elementů 🎯</h2>
+            <p>Než můžeme s HTML tagem něco udělat, musíme ho v JS "chytit" a uložit do proměnné.</p>
+            <pre><code>// HTML: &lt;h1 id="hlavni-nadpis"&gt;Starý text&lt;/h1&gt;
+
+// Chytneme element podle jeho ID
+let nadpis = document.getElementById("hlavni-nadpis");
+
+// Lze chytat i podobně jako v CSS (třídy, tagy):
+let tlacitko = document.querySelector(".moje-trida");</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 7: Lov na element</h2>
+            <p>Připravíme si "hřiště".</p>
+            <ol>
+                <li>Vytvořte si v editoru soubor <code>index.html</code> a propojte si k němu <code>script.js</code>.</li>
+                <li>Do HTML vložte odstavec: <code>&lt;p id="tajemstvi"&gt;JS je super&lt;/p&gt;</code>.</li>
+                <li>V JavaScriptu vytvořte proměnnou <code>mujPanel</code> a uložte do ní tento odstavec pomocí <code>document.getElementById()</code>.</li>
+                <li>Vypište proměnnou <code>mujPanel</code> do <code>console.log()</code>. Otevřete stránku a mrkněte do vývojářské konzole.</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>2. Manipulace s elementy 🎨</h2>
+            <p>Máme element chycený. Co s ním zmůžeme? Téměř cokoliv!</p>
+            <pre><code>let nadpis = document.getElementById("nadpis");
+
+// 1. Změna textu uvnitř tagu
+nadpis.textContent = "Zcela nový text generovaný JS!";
+
+// 2. Úprava CSS stylů (CSS vlastnosti se v JS píší camelCase)
+nadpis.style.color = "red";
+nadpis.style.backgroundColor = "black";
+nadpis.style.fontSize = "3rem";</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 8: Úprava vzhledu a textu</h2>
+            <p>Vyzkoušíme si, jak JavaScript dokáže dynamicky přepsat původní HTML a CSS.</p>
+            <ol>
+                <li>V HTML si vytvořte <code>&lt;h1 id="nadpis"&gt;Vítejte na mém webu&lt;/h1&gt;</code>.</li>
+                <li>V JS si tento nadpis najděte a uložte do proměnné.</li>
+                <li>Změňte jeho text (<code>textContent</code>) na "Tento text a vzhled vygeneroval JS!".</li>
+                <li>Změňte barvu písma (<code>style.color</code>) na bílou (<code>"white"</code>) a barvu pozadí (<code>style.backgroundColor</code>) na tmavě modrou (<code>"darkblue"</code>).</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>3. Události na elementu (Click) 🖱️</h2>
+            <p>Nechceme, aby se věci děly hned po načtení stránky. Chceme reagovat na akci uživatele.</p>
+            <p>Potřebujeme k elementu "přilepit ucho" pomocí <code>addEventListener</code>.</p>
+            <pre><code>// HTML: &lt;button id="btn-klik"&gt;Klikni&lt;/button&gt;
+
+let tlacitko = document.getElementById("btn-klik");
+
+// Posloucháme událost "click" na konkrétním tlačítku
+tlacitko.addEventListener("click", function() {
+    alert("Kliknutí funguje!");
+    document.body.style.backgroundColor = "pink";
+});</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 9: Přepínač světla</h2>
+            <ol>
+                <li>V HTML přidejte tlačítko s ID <code>vypinac</code> a textem "Zhasnout / Rozsvítit".</li>
+                <li>V JS si ho chytněte do proměnné.</li>
+                <li>Přidejte mu posluchač událostí na událost "click".</li>
+                <li>Když se na něj klikne, změňte barvu pozadí celé stránky (<code>document.body.style.backgroundColor</code>) na tmavě šedou (nebo jinou barvu).</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>4. Čtení dat z formulářů (Input) ⌨️</h2>
+            <p>Pokud chcete načíst text, který uživatel napsal do <code>&lt;input&gt;</code>, nepoužijete <code>textContent</code>, ale vlastnost <strong><code>value</code></strong>.</p>
+            <pre><code>// HTML: &lt;input type="text" id="jmeno-input"&gt;
+// &lt;button id="ulozit"&gt;Uložit&lt;/button&gt;
+
+let pole = document.getElementById("jmeno-input");
+let tlacitko = document.getElementById("ulozit");
+
+tlacitko.addEventListener("click", function() {
+    let zadanyText = pole.value; // Získá text z políčka
+    console.log("Uživatel napsal: " + zadanyText);
+    pole.value = ""; // Vyprázdní políčko po uložení
+});</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 10: Osobní pozdrav</h2>
+            <ol>
+                <li>Do HTML vložte <code>&lt;input id="jmeno"&gt;</code>, <code>&lt;button id="btn"&gt;Pozdravit&lt;/button&gt;</code> a prázdný <code>&lt;h2 id="vysledek"&gt;&lt;/h2&gt;</code>.</li>
+                <li>V JS si všechny 3 elementy uložte do proměnných.</li>
+                <li>Při kliknutí na tlačítko přečtěte hodnotu (<code>value</code>) z inputu.</li>
+                <li>Do připraveného H2 (přes <code>textContent</code>) vypište text "Ahoj " + přečtené jméno.</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>5. Vytváření nových elementů 🏗️</h2>
+            <p>A co když HTML na stránce ještě neexistuje a chceme ho z JS kompletně vytvořit? (Třeba nová položka do seznamu úkolů).</p>
+            <pre><code>// 1. Vytvoření úplně nového "odpojeného" elementu
+let novyOdstavec = document.createElement("p");
+novyOdstavec.textContent = "Byl jsem stvořen v JS!";
+novyOdstavec.style.color = "blue";
+
+// 2. Musíme ho někam "přilepit" (připojit do stromu naší stránky)
+let kontejner = document.getElementById("obsah");
+kontejner.appendChild(novyOdstavec); // Vloží ho na konec kontejneru</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏋️ Cvičení 11: Nákupní seznam</h2>
+            <ol>
+                <li>V HTML mějte <code>&lt;input id="polozka"&gt;</code>, tlačítko <code>"Přidat"</code> a seznam <code>&lt;ul id="seznam"&gt;&lt;/ul&gt;</code>.</li>
+                <li>Při kliknutí vytvořte nový element <code>&lt;li&gt;</code> (pomocí <code>createElement("li")</code>).</li>
+                <li>Jeho text (<code>textContent</code>) nastavte na to, co uživatel napsal do inputu.</li>
+                <li>Pomocí <code>appendChild()</code> "přilepte" nové <code>li</code> do vašeho seznamu <code>ul</code>.</li>
+                <li>Nezapomeňte input na konci funkce vyprázdnit!</li>
+            </ol>
+            <div class="hint">Gratuluji, právě jste napsali svou první To-Do aplikaci! 🎉</div>
+        </div>
+
+        <div class="slide">
+            <h2>Bonus: Tlačítko Smazat a čistý Input 🗑️</h2>
+            <p>Co znamenalo "vyprázdnit input"? Stačí na konec funkce dát <code>polozka.value = "";</code>, ať uživatel nemusí mazat text ručně.</p>
+            <p>A jak ke každé položce přidat křížek na smazání? Musíme ho vytvořit <strong>uvnitř</strong> stejné funkce a přidat mu vlastní událost!</p>
+            <pre><code>let btnSmazat = document.createElement("button");
+btnSmazat.textContent = "Smazat";
+
+// Událost přímo pro toto jedno tlačítko
+btnSmazat.addEventListener("click", function() {
+    noveLi.remove(); // Smaže celé &lt;li&gt; i s tímto tlačítkem
+});
+
+// Tlačítko vložíme DO vytvořeného &lt;li&gt;
+noveLi.appendChild(btnSmazat);</code></pre>
+        </div>
+
+        <!-- ==========================================
+             ČÁST 9: ZÁVĚR A ÚKOL
         =========================================== -->
         <div class="slide exercise">
             <h2>🏰 Úkol 🐉</h2>
@@ -831,6 +984,7 @@ hrac.zautocNa(skret);  // Vypíše: Rytíř útočí! Skřet má teď 20 HP.</co
                 <li>Víte, jak nechat počítač dřít místo vás pomocí cyklů (for, while).</li>
                 <li>Znáte pole (Arrays) a jak v nich hledat.</li>
                 <li>Rozumíte funkcím a objektům (továrnám na kód a entitám).</li>
+                <li><strong>Umíte manipulovat s DOMem, reagovat na kliknutí a tvořit nové HTML elementy.</strong></li>
             </ul>
             <p><strong>Nyní je čas programovat, dělat chyby, opravovat je a učit se dál!</strong></p>
         </div>
