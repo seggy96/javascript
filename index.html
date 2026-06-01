@@ -730,7 +730,7 @@ auto.rokVyroby = 2020;  // Přidání úplně nové vlastnosti</code></pre>
     }
 };
 
-// Funkci zavoláme pomocí tečky, stejně jako když jsme přidávali do pole
+// Funkci zavoláme pomocí tečky
 hrac.pozdrav(); </code></pre>
         </div>
 
@@ -759,51 +759,15 @@ auto.startMotoru();
 console.log("Stav po startu: " + auto.engine_status); // true</code></pre>
         </div>
 
-        <div class="slide">
-            <h2>Herní příklad: Hráč vs. NPC 👾</h2>
-            <p>Pojďme naprogramovat souboj. Vytvoříme objekty, které na sebe budou útočit. Pomocí magického slova <strong><code>this</code></strong> (znamená "tento konkrétní objekt") může objekt sahat na své vlastní vlastnosti.</p>
-            <pre><code>let hrac = {
-    jmeno: "Rytíř",
-    zivoty: 100,
-    sila: 15,
-    zautocNa: function(cil) {
-        cil.zivoty -= this.sila; // Odečteme životy cíli podle "mojí" síly
-        console.log(this.jmeno + " útočí! " + cil.jmeno + " má teď " + cil.zivoty + " HP.");
-    }
-};</code></pre>
-            <p>Všimněte si: <code>cil</code> je parametr (ten, koho jdeme praštit), <code>this</code> jsem já sám (ten, kdo útočí).</p>
-        </div>
-
-        <div class="slide">
-            <h2>Souboj v aréně! 🎬</h2>
-            <p>Teď vytvoříme Rytíři protivníka a necháme je, ať si to vyříkají.</p>
-            <pre><code>let skret = {
-    jmeno: "Skřet",
-    zivoty: 50,
-    sila: 8,
-    zautocNa: function(cil) {
-        cil.zivoty -= this.sila;
-        console.log(this.jmeno + " útočí! " + cil.jmeno + " má teď " + cil.zivoty + " HP.");
-    }
-};
-
-// Akce začíná!
-hrac.zautocNa(skret);  // Vypíše: Rytíř útočí! Skřet má teď 35 HP.
-skret.zautocNa(hrac);  // Vypíše: Skřet útočí! Rytíř má teď 92 HP.
-hrac.zautocNa(skret);  // Vypíše: Rytíř útočí! Skřet má teď 20 HP.</code></pre>
-            <div class="hint">Takhle přesně fungují reálné hry! Vše na obrazovce je objekt s vlastnostmi (pozice, HP) a metodami (pohyb, útok).</div>
-        </div>
-
         <div class="slide exercise">
             <h2>🏋️ Cvičení 6: Léčivý lektvar 🧪</h2>
-            <p>Váš Rytíř dostal zásah a potřebuje se vyléčit.</p>
+            <p>Váš hrdina dostal zásah a potřebuje se vyléčit.</p>
             <ol>
-                <li>Vytvořte si v kódu objekt <code>hrac</code> z předchozích ukázek.</li>
-                <li>Přidejte mu zbrusu novou metodu (funkci) s názvem <code>vypijLektvar</code>. (Nezapomeňte ji oddělit čárkou od předchozích vlastností!)</li>
-                <li>Tato metoda nebude potřebovat žádný parametr.</li>
-                <li>Uvnitř metody zvyšte rytířovy <code>zivoty</code> (musíte použít <code>this.zivoty</code>) o 20.</li>
-                <li>Do metody přidejte výpis do konzole: "Rytíř vypil lektvar a má teď [počet] HP".</li>
-                <li>Vyzkoušejte metodu zavolat: <code>hrac.vypijLektvar();</code></li>
+                <li>Vytvořte si v kódu jednoduchý objekt <code>hrac</code>.</li>
+                <li>Dejte mu vlastnost <code>zivoty</code> (např. 80).</li>
+                <li>Přidejte mu zbrusu novou metodu s názvem <code>vypijLektvar</code>.</li>
+                <li>Uvnitř metody zvyšte jeho životy (musíte použít <code>this.zivoty</code>) o 20.</li>
+                <li>Vyzkoušejte metodu zavolat a vypište si nový stav životů do konzole.</li>
             </ol>
         </div>
 
@@ -816,7 +780,7 @@ hrac.zautocNa(skret);  // Vypíše: Rytíř útočí! Skřet má teď 20 HP.</co
             <p>Co je to <strong>DOM (Document Object Model)</strong>?</p>
             <ul>
                 <li>Prohlížeč načte vaše HTML a vytvoří z něj obrovský JavaScriptový objekt (stromovou strukturu).</li>
-                <li><strong>Důležité:</strong> Na tyto ukázky už nefunguje Node.js ani Code Runner. Musíte mít JS propojený s HTML souborem a ten otevřít v normálním prohlížeči!</li>
+                <li><strong>Důležité:</strong> Na tyto ukázky musíte mít JS propojený s HTML souborem a ten otevřít v normálním prohlížeči!</li>
             </ul>
         </div>
 
@@ -914,8 +878,8 @@ tlacitko.addEventListener("click", function() {
             <ol>
                 <li>Do HTML vložte <code>&lt;input id="jmeno"&gt;</code>, <code>&lt;button id="btn"&gt;Pozdravit&lt;/button&gt;</code> a prázdný <code>&lt;h2 id="vysledek"&gt;&lt;/h2&gt;</code>.</li>
                 <li>V JS si všechny 3 elementy uložte do proměnných.</li>
-                <li>Při kliknutí na tlačítko přečtěte hodnotu (<code>value</code>) z inputu.</li>
-                <li>Do připraveného H2 (přes <code>textContent</code>) vypište text "Ahoj " + přečtené jméno.</li>
+                <li>Při kliknutí na tlačítko přečtěte hodnotu z inputu.</li>
+                <li>Do připraveného H2 vypište text "Ahoj " + přečtené jméno.</li>
             </ol>
         </div>
 
@@ -937,8 +901,8 @@ kontejner.appendChild(novyOdstavec); // Vloží ho na konec kontejneru</code></p
             <ol>
                 <li>V HTML mějte <code>&lt;input id="polozka"&gt;</code>, tlačítko <code>"Přidat"</code> a seznam <code>&lt;ul id="seznam"&gt;&lt;/ul&gt;</code>.</li>
                 <li>Při kliknutí vytvořte nový element <code>&lt;li&gt;</code> (pomocí <code>createElement("li")</code>).</li>
-                <li>Jeho text (<code>textContent</code>) nastavte na to, co uživatel napsal do inputu.</li>
-                <li>Pomocí <code>appendChild()</code> "přilepte" nové <code>li</code> do vašeho seznamu <code>ul</code>.</li>
+                <li>Jeho text nastavte na to, co uživatel napsal do inputu.</li>
+                <li>Pomocí <code>appendChild()</code> "přilepte" nové <code>li</code> do vašeho seznamu.</li>
                 <li>Nezapomeňte input na konci funkce vyprázdnit!</li>
             </ol>
             <div class="hint">Gratuluji, právě jste napsali svou první To-Do aplikaci! 🎉</div>
@@ -961,32 +925,151 @@ noveLi.appendChild(btnSmazat);</code></pre>
         </div>
 
         <!-- ==========================================
-             ČÁST 9: ZÁVĚR A ÚKOL
+             ČÁST 9: DVOUHODINOVKA A PROJEKT
         =========================================== -->
         <div class="slide exercise">
-            <h2>🏰 Úkol 🐉</h2>
-            <p>Nyní víte vše potřebné k tomu, abyste vytvořili <strong>vlastní textové RPG z pohledu hrdiny</strong>!</p>
+            <h2>🔥 Den 2: Architektura webové aplikace 🔥</h2>
+            <p>Dnes využijeme všechny dosavadní znalosti a postavíme ucelenou aplikaci. Založte si <strong>nový projekt</strong>.</p>
             <ul>
-                <li>Navštivte <strong>freeCodeCamp</strong> a najděte projekt <em>"Learn Basic JavaScript by Building a Role Playing Game"</em>.</li>
-                <li>Vytvoříte pole objektů pro zbraně a lokace.</li>
-                <li>Budete používat funkce pro souboje s příšerami.</li>
-                <li>Naučíte se tam navíc <strong>DOM manipulaci</strong> (měnit HTML podle toho, kam hrdina vstoupí). Z logiky v konzoli přejdete k vizuální hře!</li>
+                <li>Na ploše si vytvořte složku <code>MojeAplikace</code>.</li>
+                <li>V ní si vytvořte <code>index.html</code>, <code>style.css</code> a <code>script.js</code>.</li>
+                <li>Soubory si propojte a otevřete výsledek v prohlížeči (pomocí Live Serveru).</li>
             </ul>
-            <div class="hint">Tohle je reálný projekt do vašeho portfolia. Zvládnete to!</div>
+            <div class="hint">Cílem dnešní dvouhodinovky je naprogramovat a odevzdat funkční aplikaci typu "Clicker/Tycoon".</div>
         </div>
 
         <div class="slide">
-            <h2>Co jsme se naučili? 🎓</h2>
-            <p>Máte za sebou obrovský kus práce.</p>
-            <ul>
-                <li>Víte, jak ukládat data do proměnných (let/const) a typů (Number, String).</li>
-                <li>Víte, jak nechat program se rozhodovat (if/else).</li>
-                <li>Víte, jak nechat počítač dřít místo vás pomocí cyklů (for, while).</li>
-                <li>Znáte pole (Arrays) a jak v nich hledat.</li>
-                <li>Rozumíte funkcím a objektům (továrnám na kód a entitám).</li>
-                <li><strong>Umíte manipulovat s DOMem, reagovat na kliknutí a tvořit nové HTML elementy.</strong></li>
-            </ul>
-            <p><strong>Nyní je čas programovat, dělat chyby, opravovat je a učit se dál!</strong></p>
+            <h2>Užitečný koncept 1: Template Literals 💬</h2>
+            <p>Při stavbě aplikací budeme často vypisovat hodnoty proměnných na obrazovku. Spojovat text pomocí <code>+</code> je nepřehledné. Moderní JS používá <strong>Template Literals</strong>.</p>
+            <p>Používáme k tomu zpětné apostrofy: <strong><code>` `</code></strong> (Na české klávesnici: Pravý Alt + ý).</p>
+            <pre><code>let skore = 150;
+let hrac = "Karel";
+
+// Zastaralý způsob:
+let text1 = "Hráč " + hrac + " má " + skore + " bodů.";
+
+// Moderní způsob (proměnné vkládáme do ${}):
+let text2 = `Hráč ${hrac} má ${skore} bodů.`;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Užitečný koncept 2: Generování náhody 🎲</h2>
+            <p>Generování pseudonáhodných čísel je nezbytné pro herní i aplikační mechaniky. Funkce <code>Math.random()</code> generuje desetinné číslo od 0 do 0.999.</p>
+            <pre><code>let n = Math.random(); // např. 0.54879
+
+// Postup pro získání celého čísla od 1 do 10:
+// 1. Vynásobíme deseti (získáme 0 až 9.999)
+// 2. Ořízneme desetinná místa pomocí Math.floor() (máme 0 až 9)
+// 3. Přičteme 1 (máme 1 až 10)
+
+let nahodneCislo = Math.floor(Math.random() * 10) + 1;
+console.log(`Hodnota kostky: ${nahodneCislo}`);</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Užitečný koncept 3: Časovače (setInterval) ⏱️</h2>
+            <p>Potřebujeme spouštět určitý blok kódu opakovaně v definovaných časových intervalech. K tomu slouží funkce <code>setInterval</code>.</p>
+            <pre><code>let penize = 0;
+
+// setInterval bere 2 parametry: Callback funkci a interval v milisekundách
+setInterval(function() {
+    penize++;
+    console.log(`Automatický příjem. Stav účtu: ${penize}`);
+}, 1000); // 1000 ms = 1 sekunda</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Fáze 1: UI struktura (HTML) 🏗️</h2>
+            <p>Téma: <strong>Klon hry Cookie Clicker</strong>. Základním mechanismem je zisk bodů (sušenek) za klikání a jejich následná investice do vylepšení.</p>
+            <p>Vložte si do svého nového <code>index.html</code> tuto základní kostru. Všimněte si identifikátorů (ID), přes které budeme elementy řídit z JS.</p>
+            <pre><code>&lt;h1&gt;Cookie Clicker&lt;/h1&gt;
+&lt;h2&gt;Upečeno sušenek: &lt;span id="skore"&gt;0&lt;/span&gt;&lt;/h2&gt;
+
+&lt;!-- Hlavní interaktivní prvek --&gt;
+&lt;button id="btn-susenka"&gt;Upéct sušenku&lt;/button&gt;
+
+&lt;hr&gt;
+
+&lt;h3&gt;Obchod s upgrady&lt;/h3&gt;
+&lt;button id="btn-babicka"&gt;Najmout Babičku (Cena: 10 sušenek)&lt;/button&gt;
+&lt;button id="btn-tovarna"&gt;Koupit Továrnu (Cena: 50 sušenek)&lt;/button&gt;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Fáze 2: Jádro aplikace a DOM ⚡</h2>
+            <p>Přesuneme logiku do <code>script.js</code>. Nadefinujeme stavové proměnné a napojíme první událost.</p>
+            <pre><code>// 1. Stavové proměnné aplikace
+let susenky = 0;
+let silaKliknuti = 1; // Přírůstek za jedno kliknutí
+
+// 2. Reference na DOM elementy
+let btnSusenka = document.getElementById("btn-susenka");
+let textSkore = document.getElementById("skore");
+
+// 3. Event Listener
+btnSusenka.addEventListener("click", function() {
+    susenky += silaKliknuti; // Úprava logiky (stavu)
+    textSkore.textContent = susenky; // Aktualizace UI
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Fáze 3: Logika transakcí (Babičky) 👵</h2>
+            <p>Při nákupu vylepšení musíme provést kontrolu stavu účtu, odečíst prostředky a přepočítat cenu pro další nákup.</p>
+            <pre><code>let btnBabicka = document.getElementById("btn-babicka");
+let cenaBabicka = 10;
+
+btnBabicka.addEventListener("click", function() {
+    // Validační podmínka
+    if (susenky >= cenaBabicka) {
+        susenky -= cenaBabicka; // Platba
+        silaKliknuti++;         // Aplikace vylepšení (silnější klik)
+        
+        textSkore.textContent = susenky; 
+        
+        // Růst ceny
+        cenaBabicka += 10; 
+        btnBabicka.textContent = `Najmout Babičku (Cena: ${cenaBabicka} sušenek)`;
+    } else {
+        alert("Nedostatek prostředků!");
+    }
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>Fáze 4: Automatizace procesů (Továrna) 🏭</h2>
+            <p>Zde implementujeme dříve vysvětlený <code>setInterval</code>. Nákup spustí asynchronní časovač, který bude ovlivňovat stav nezávisle na uživateli.</p>
+            <pre><code>let btnTovarna = document.getElementById("btn-tovarna");
+let cenaTovarna = 50;
+
+btnTovarna.addEventListener("click", function() {
+    if (susenky >= cenaTovarna) {
+        susenky -= cenaTovarna;
+        textSkore.textContent = susenky;
+        
+        cenaTovarna += 50;
+        btnTovarna.textContent = `Koupit Továrnu (Cena: ${cenaTovarna})`;
+        
+        // Spuštění intervalu pro zakoupenou jednotku
+        setInterval(function() {
+            susenky++; 
+            textSkore.textContent = susenky;
+        }, 1000); // Exekuce (přidání sušenky) každých 1000 ms
+    }
+});</code></pre>
+        </div>
+
+        <div class="slide exercise">
+            <h2>🏆 Výzva pro dnešní den (Odevzdání projektu)</h2>
+            <p>Základní logiku máte funkční. Vaším úkolem je aplikaci rozšířit a nastylovat. <strong>Odevzdává se kompletní funkční projekt.</strong></p>
+            <p>Implementujte minimálně 3 z následujících požadavků:</p>
+            <ol>
+                <li><strong>UI/UX Design:</strong> Pomocí CSS vytvořte moderní vzhled (použijte flexbox/grid, hover efekty na tlačítkách, vhodné fonty, velké kulaté tlačítko sušenky).</li>
+                <li><strong>Nová třída vylepšení:</strong> Přidejte do obchodu novou položku (např. "Důl na čokoládu" nebo "Portál"), která přes <code>setInterval</code> generuje ještě větší zisk.</li>
+                <li><strong>Risk management (Náhoda):</strong> Tlačítko "Zlatá sušenka" (Riziková investice). Přes <code>Math.random()</code> systém s 50% šancí přičte 100 bodů, nebo s 50% šancí odečte 50 bodů.</li>
+                <li><strong>Dynamické UI:</strong> Pomocí manipulace se styly v JS (<code>display: none</code> / <code>block</code>) skryjte celou sekci obchodu, dokud hráč nenašetří alespoň 10 sušenek.</li>
+                <li><strong>Title update:</strong> Zajistěte, aby se aktuální počet sušenek propisoval přímo do <code>document.title</code>.</li>
+            </ol>
         </div>
 
     </div>
